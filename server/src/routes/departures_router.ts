@@ -11,7 +11,6 @@ class DeparturesRouter {
     }
 
     private mountEndpoints() {
-        console.log("DeparturesRouter?")
         this.router.get('/', DeparturesController.getDepartures);
     }
 }
