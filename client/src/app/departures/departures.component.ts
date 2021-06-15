@@ -21,13 +21,13 @@ export class DeparturesComponent implements OnInit {
   constructor(private service: DeparturesService) {
     this.m_departures = [];
     this.m_service = service;
-   }
+  }
 
   ngOnInit(): void {
     this.m_service.getAll()
-    .subscribe(
-      res =>
-        this.m_departures = res as IDeparture[])
+      .subscribe(
+        res =>
+          this.m_departures = res as IDeparture[])
   }
 
   receiveInput($event) {
@@ -67,7 +67,7 @@ export class DeparturesComponent implements OnInit {
       this.m_best_options = {};
       for (let i = 0; i < this.m_options[train].length; i++) {
         let option_as_min = this.converTimeToNumber(this.m_options[train][i]);
-        if (option_as_min <= this.m_input['hour']+60 && option_as_min >= this.m_input['hour']-60) {
+        if (option_as_min <= this.m_input['hour'] + 60 && option_as_min >= this.m_input['hour'] - 60) {
           let distance_from_goal = option_as_min - this.m_input['hour'];
           this.m_best_options[this.m_options[train][i]] = distance_from_goal;
           if (Math.abs(distance_from_goal) <= this.m_best_distance_from_goal) {
@@ -89,7 +89,7 @@ export class DeparturesComponent implements OnInit {
 
   converTimeToNumber(time: string) {
     let hour_split = time.split(':');
-    let total_min = parseInt(hour_split[0])*60 + parseInt(hour_split[1]);
+    let total_min = parseInt(hour_split[0]) * 60 + parseInt(hour_split[1]);
     return total_min;
   }
 
@@ -99,8 +99,8 @@ export class DeparturesComponent implements OnInit {
       sortable.push([option, options[option]]);
     }
 
-    sortable.sort(function(a, b) {
-        return a[1] - b[1];
+    sortable.sort(function (a, b) {
+      return a[1] - b[1];
     });
 
     return sortable;
@@ -120,23 +120,24 @@ export class DeparturesComponent implements OnInit {
       }
       else if (options[i][1] > this.m_best_distance_from_goal) {
         after[options[i][0]] = options[i][1];
-      }}
+      }
+    }
 
-      let ordered_before = this.orderOptions(before);
-      let ordered_after = this.orderOptions(after);
+    let ordered_before = this.orderOptions(before);
+    let ordered_after = this.orderOptions(after);
 
-      for (let i = 0; i < 2; i++) {
-        if (ordered_before[i]) {
-          final[ordered_before[i][0]] = ordered_before[i][1];
-        }
-        if (ordered_after[i]) {
-          final[ordered_after[i][0]] = ordered_after[i][1];
-        }
-
+    for (let i = 0; i < 2; i++) {
+      if (ordered_before[i]) {
+        final[ordered_before[i][0]] = ordered_before[i][1];
+      }
+      if (ordered_after[i]) {
+        final[ordered_after[i][0]] = ordered_after[i][1];
       }
 
-      return final;
     }
-    }
+
+    return final;
+  }
+}
 
 
