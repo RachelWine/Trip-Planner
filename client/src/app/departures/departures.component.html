@@ -1,10 +1,9 @@
-<!-- <input 
-    type="text" (keyup.enter)="searchDepartures(input)" #input><br> -->
-<div>departure</div>
+<button (click)="onRequestSearch()">Search</button>
+<div>Optional Departures:</div>
 <ul class="list-group">
     <li 
         class="list-group-item"
-        *ngFor="let departure of m_departures">
-        {{ departure.departures }}
+        *ngFor="let option of m_final_best_options">
+        {{ option }}
     </li>
 </ul>

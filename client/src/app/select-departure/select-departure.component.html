@@ -1,1 +1,7 @@
-<p>select-departure works!</p>
+<input 
+    type="datetime-local"
+    [value]="date"
+    (change)="onChange($event.target)">
+
+    <div> search for day - {{ day }} </div>
+    <div> search for hour - {{ hour }} </div>
