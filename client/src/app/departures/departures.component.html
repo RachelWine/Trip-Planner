@@ -1,9 +1,12 @@
+<app-select-departure (inputEvent)="receiveInput($event)"></app-select-departure>
 <button (click)="onRequestSearch()">Search</button>
 <div>Optional Departures:</div>
-<ul class="list-group">
-    <li 
-        class="list-group-item"
-        *ngFor="let option of m_final_best_options">
-        {{ option }}
-    </li>
-</ul>
+<div *ngIf="m_final_best_options.length == 0; then nooptions; else options"></div>
+<ng-template #options>
+    <ul>
+        <li *ngFor="let option of m_final_best_options">
+            {{ option }}
+        </li>
+    </ul>
+</ng-template>
+<ng-template #nooptions>No Options</ng-template>

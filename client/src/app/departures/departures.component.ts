@@ -8,21 +8,19 @@ import IDeparture from '../../../../server/src/interfaces/IDeparture';
   styleUrls: ['./departures.component.css']
 })
 export class DeparturesComponent implements OnInit {
+  private m_input: object;
   public m_departures: IDeparture[];
   private m_service: DeparturesService;
   private m_options: object;
   private m_best_options: object;
-  private m_best_option: number;
+  private m_best_distance_from_goal: number;
+  public m_best_option: string;
   public m_final_best_options: string[];
 
 
   constructor(private service: DeparturesService) {
     this.m_departures = [];
     this.m_service = service;
-    this.m_options = {};
-    this.m_best_options = {};
-    this.m_best_option = 0;
-    this.m_final_best_options = []
    }
 
   ngOnInit(): void {
@@ -32,10 +30,28 @@ export class DeparturesComponent implements OnInit {
         this.m_departures = res as IDeparture[])
   }
 
-  onRequestSearch() {
-    let day = "sunday";
-    let hour = this.converTimeToNumber("05:30");
+  receiveInput($event) {
+    this.m_input = {};
+    this.m_options = {};
+    this.m_best_options = {};
+    this.m_best_distance_from_goal = 0;
+    this.m_final_best_options = [];
+    this.m_best_option = "";
 
+    this.m_input = $event;
+    this.m_input['hour'] = this.converTimeToNumber(this.m_input['hour']);
+  }
+
+  onRequestSearch() {
+    this.findOptionalDeparturesBySelectedDay(this.m_input['day']);
+
+    this.findOptionsWithinHour();
+
+    this.findFinalOptions();
+  }
+
+
+  findOptionalDeparturesBySelectedDay(day: string): void {
     for (let i = 0; i < this.m_departures.length; i++) {
       if (this.m_departures[i][day] === true) {
         this.m_options[i] = [];
@@ -44,22 +60,26 @@ export class DeparturesComponent implements OnInit {
         }
       }
     }
+  }
 
+  findOptionsWithinHour(): void {
     for (let train in this.m_options) {
       this.m_best_options = {};
       for (let i = 0; i < this.m_options[train].length; i++) {
         let option_as_min = this.converTimeToNumber(this.m_options[train][i]);
-        if (option_as_min <= hour+60 && option_as_min >= hour-60) {
-          let distance_from_goal = option_as_min - hour;
+        if (option_as_min <= this.m_input['hour']+60 && option_as_min >= this.m_input['hour']-60) {
+          let distance_from_goal = option_as_min - this.m_input['hour'];
           this.m_best_options[this.m_options[train][i]] = distance_from_goal;
-
-          if (Math.abs(distance_from_goal) <= this.m_best_option) {
-            this.m_best_option = Math.abs(distance_from_goal);
+          if (Math.abs(distance_from_goal) <= this.m_best_distance_from_goal) {
+            this.m_best_distance_from_goal = Math.abs(distance_from_goal);
+            this.m_best_option = this.m_options[train][i];
           }
         }
       }
     }
+  }
 
+  findFinalOptions(): void {
     let obj_final = this.peekFinalResults(this.orderOptions(this.m_best_options))
     for (let final_option in obj_final) {
       this.m_final_best_options.push(final_option);
@@ -92,13 +112,13 @@ export class DeparturesComponent implements OnInit {
     let after = {};
 
     for (let i = 0; i < options.length; i++) {
-      if (options[i][1] == this.m_best_option) {
+      if (options[i][1] == this.m_best_distance_from_goal) {
         final[options[i][0]] = options[i][1];
       }
-      else if (options[i][1] < this.m_best_option) {
+      else if (options[i][1] < this.m_best_distance_from_goal) {
         before[options[i][0]] = options[i][1];
       }
-      else if (options[i][1] > this.m_best_option) {
+      else if (options[i][1] > this.m_best_distance_from_goal) {
         after[options[i][0]] = options[i][1];
       }}
 

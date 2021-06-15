@@ -1,7 +1,5 @@
 <input 
     type="datetime-local"
-    [value]="date"
-    (change)="onChange($event.target)">
-
-    <div> search for day - {{ day }} </div>
-    <div> search for hour - {{ hour }} </div>
+    [value]="m_choosen_date"
+    (change)="onChange($event.target)"
+    min="2021-06-16T00:00" max="2021-06-22T00:00">
