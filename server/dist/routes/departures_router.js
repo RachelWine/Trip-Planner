@@ -8,7 +8,6 @@ class DeparturesRouter {
         this.mountEndpoints();
     }
     mountEndpoints() {
-        console.log("DeparturesRouter?");
         this.router.get('/', departures_controller_1.default.getDepartures);
     }
 }

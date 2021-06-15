@@ -1,1 +1,10 @@
-<p>departures works!</p>
+<!-- <input 
+    type="text" (keyup.enter)="searchDepartures(input)" #input><br> -->
+<div>departure</div>
+<ul class="list-group">
+    <li 
+        class="list-group-item"
+        *ngFor="let departure of m_departures">
+        {{ departure.departures }}
+    </li>
+</ul>
